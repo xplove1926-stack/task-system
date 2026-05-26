@@ -1,0 +1,9 @@
+﻿{
+  "name": "shengxian-task",
+  "version": "1.0.0",
+  "description": "生鲜配送任务追踪系统",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
