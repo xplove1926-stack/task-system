@@ -5,9 +5,9 @@ const DATA_FILE = path.join(__dirname, "data.json");
 const PORT = process.env.PORT || 3456;
 
 function loadData() { try { return JSON.parse(fs.readFileSync(DATA_FILE, "utf8")); } catch (_) { return null; } }
-function saveData(d) { fs.writeFileSync(DATA_FILE, JSON.stringify(d, null, 2), "utf8"); }
+function saveData(d) { if(d===null){try{fs.unlinkSync(DATA_FILE)}catch(_){}} else {fs.writeFileSync(DATA_FILE, JSON.stringify(d, null, 2), "utf8");} }
 
-function initData() {
+function initData() { var d=loadData(); if(d&&d.employees&&d.employees.length<18){saveData(null);d=null;}
   if (loadData()) return;
   const tasks = {
     "老板": ["查看团队日报","审批重要事项","客户关系维护","经营数据分析"],
@@ -182,5 +182,6 @@ server.listen(PORT, () => {
   console.log("公司绩效薪酬统计");
   console.log("服务地址: http://localhost:" + PORT);
 });
+
 
 
