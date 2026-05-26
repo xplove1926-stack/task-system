@@ -3,77 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>生鲜配送 · 任务追踪</title>
+<title>公司绩效薪酬统计</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f2f5;color:#1a1a2e;min-height:100vh}
-:root{--pri:#4a6cf7;--succ:#10b981;--warn:#f59e0b;--dang:#ef4444;--txt2:#6b7280;--bd:#e5e7eb}
-.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:16px;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)}
-.login-card{background:#fff;border-radius:16px;padding:36px 28px;width:100%;max-width:380px;box-shadow:0 16px 48px rgba(0,0,0,.25)}
-.login-card h1{text-align:center;font-size:22px;margin-bottom:4px}
-.login-card .sub{text-align:center;font-size:13px;color:var(--txt2);margin-bottom:28px}
-.login-card input{width:100%;padding:12px 14px;border:2px solid var(--bd);border-radius:10px;font-size:15px;margin-bottom:14px}
-.login-card input:focus{outline:none;border-color:var(--pri)}
-.login-card .err{color:var(--dang);font-size:13px;text-align:center;margin-bottom:8px;display:none}
-.login-card .login-btn{width:100%;padding:14px;background:var(--pri);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer}
-.login-card .hint{text-align:center;font-size:12px;color:var(--txt2);margin-top:16px}
-.app{display:none;max-width:900px;margin:0 auto;padding:8px}
-.header{background:linear-gradient(135deg,#1a1a2e,#16213e);color:#fff;padding:14px 16px;border-radius:12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.header .t{font-size:17px;font-weight:700}.header .u{font-size:12px;opacity:.8}
-.header .out{background:rgba(255,255,255,.15);color:#fff;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer}
-.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0;margin-bottom:10px}
-.tabs button{flex-shrink:0;padding:8px 18px;border:none;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.tabs button.active{background:var(--pri);color:#fff;font-weight:600}
-.card{background:#fff;border-radius:12px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:10px}
-.card h3{font-size:15px;margin-bottom:10px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:10px}
-.stat{background:#fff;border-radius:12px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);text-align:center}
-.stat .n{font-size:26px;font-weight:700;color:var(--pri)}.stat .l{font-size:11px;color:var(--txt2);margin-top:2px}
-.today-label{font-size:13px;color:var(--txt2);margin-bottom:10px}
-.task-item{display:flex;align-items:center;gap:10px;padding:12px;border-radius:10px;margin-bottom:6px;background:#f9fafb;border:1px solid var(--bd);cursor:pointer;transition:all .2s}
-.task-item:hover{background:#f3f4f6}
+body{font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;background:#f5fdf5;color:#3d5a40;min-height:100vh}
+:root{--gr:#87D19E;--gr2:#a8e6b0;--gr3:#6dbd83;--yl:#ffe8b0;--yl2:#ffd97a;--or:#ffb088;--or2:#ff9a6c;--pk:#ffd4d4;--wh:#fffef9;--s:#10b981;--w:#f59e0b;--d:#ef4444;--bg:#f5fdf5;--bd:#e2f0e4;--t1:#3d5a40;--t2:#7a9a7e;--r:20px}
+
+/* Login - Green botanical */
+.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;background:linear-gradient(160deg,#e8f5e9 0%,#f5fdf5 40%,#f0faf2 100%);position:relative;overflow:hidden}
+.login-page::before{content:'';position:absolute;top:-60px;left:-40px;width:200px;height:200px;background:radial-gradient(ellipse,#87D19E 0%,#a8e6b0 40%,transparent 70%);border-radius:50%;opacity:.15}
+.login-page::after{content:'';position:absolute;bottom:-80px;right:-50px;width:220px;height:220px;background:radial-gradient(ellipse,#ffb088 0%,#ffd4a8 40%,transparent 70%);border-radius:50%;opacity:.1}
+.login-card{background:#fffef9;border-radius:24px;padding:44px 36px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(135,209,158,.12);position:relative;z-index:1}
+.login-card .logo{text-align:center;margin-bottom:12px;display:inline-block;width:68px;height:68px;background:linear-gradient(135deg,#87D19E,#a8e6b0);border-radius:20px;line-height:68px;font-size:32px;box-shadow:0 6px 24px rgba(135,209,158,.25)}
+.login-card h1{text-align:center;font-size:23px;font-weight:700;color:#3d5a40;margin-bottom:4px;letter-spacing:1px}
+.login-card .sub{text-align:center;font-size:14px;color:#7a9a7e;margin-bottom:32px}
+.login-card .field{margin-bottom:20px}
+.login-card .field label{display:block;font-size:15px;font-weight:600;color:#4a6b4d;margin-bottom:8px}
+.login-card .field input{width:100%;padding:16px 18px;border:2px solid #e2f0e4;border-radius:16px;font-size:17px;background:#fafff7;transition:all .25s;color:#3d5a40}
+.login-card .field input:focus{outline:none;border-color:#87D19E;box-shadow:0 0 0 4px rgba(135,209,158,.1);background:#fff}
+.login-card .field input::placeholder{color:#c4d4c6}
+.login-card .err{color:#ef4444;font-size:14px;text-align:center;margin-bottom:8px;display:none}
+.login-card .login-btn{width:100%;padding:16px;background:linear-gradient(135deg,#87D19E,#6dbd83);color:#fff;border:none;border-radius:50px;font-size:17px;font-weight:700;cursor:pointer;letter-spacing:2px;box-shadow:0 6px 20px rgba(135,209,158,.3);transition:all .25s}
+.login-card .login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(135,209,158,.4)}
+.login-card .hint{text-align:center;font-size:13px;color:#b5c9b8;margin-top:22px}
+.login-page .lf1{position:absolute;top:24px;left:30px;width:44px;height:32px;background:#87D19E;border-radius:50% 0 50% 0;transform:rotate(-20deg);opacity:.2}
+.login-page .lf2{position:absolute;top:28px;right:34px;width:36px;height:40px;background:#a8e6b0;border-radius:0 50% 0 50%;transform:rotate(18deg);opacity:.2}
+.login-page .lf3{position:absolute;bottom:32px;right:44px;width:30px;height:24px;background:#ffb088;border-radius:0 50% 50% 0;transform:rotate(35deg);opacity:.15}
+
+/* App - Fresh produce theme */
+.app{display:none;max-width:960px;margin:0 auto;padding:10px}
+
+/* Header with warm gradient */
+.header{background:linear-gradient(135deg,#87D19E 0%,#a8e6b0 50%,#ffb088 100%);color:#fff;padding:16px 22px;border-radius:var(--r);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;box-shadow:0 4px 20px rgba(135,209,158,.25);position:relative;overflow:hidden}
+.header::after{content:'';position:absolute;top:-20px;right:-30px;width:80px;height:80px;background:rgba(255,255,255,.08);border-radius:50%}
+.header .t{font-size:19px;font-weight:800;letter-spacing:1px;position:relative;z-index:1}
+.header .u{font-size:14px;opacity:.9;font-weight:500;position:relative;z-index:1}
+.header .btns{display:flex;gap:8px;position:relative;z-index:1}
+.header .out,.header .pw{background:rgba(255,255,255,.3);color:#fff;border:none;padding:9px 18px;border-radius:50px;font-size:13px;cursor:pointer;font-weight:600;backdrop-filter:blur(4px);transition:all .2s}
+.header .out:hover,.header .pw:hover{background:rgba(255,255,255,.45);transform:scale(1.03)}
+
+/* Cute tabs */
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:6px 0;margin-bottom:12px}
+.tabs button{flex-shrink:0;padding:10px 22px;border:none;border-radius:50px;background:#fffef9;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:all .2s;color:#3d5a40;border:2px solid transparent}
+.tabs button:hover{border-color:#a8e6b0;transform:translateY(-1px)}
+.tabs button.active{background:linear-gradient(135deg,#87D19E,#a8e6b0);color:#fff;box-shadow:0 4px 14px rgba(135,209,158,.3)}
+
+/* Cards */
+.card{background:#fffef9;border-radius:var(--r);padding:22px;box-shadow:0 2px 16px rgba(0,0,0,.03);margin-bottom:12px;border:1px solid #f0f5f1}
+.card h3{font-size:17px;margin-bottom:12px;color:#3d5a40}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-bottom:12px}
+.stat{background:#fffef9;border-radius:18px;padding:18px 14px;box-shadow:0 2px 12px rgba(0,0,0,.03);text-align:center;border:1px solid #f0f5f1;transition:transform .2s}
+.stat:hover{transform:translateY(-2px)}
+.stat .n{font-size:32px;font-weight:800;background:linear-gradient(135deg,#87D19E,#6dbd83);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat .l{font-size:13px;color:var(--t2);margin-top:4px;font-weight:500}
+
+.today-label{font-size:15px;color:var(--t2);margin-bottom:14px;font-weight:500}
+
+/* Cute task items */
+.task-item{display:flex;align-items:center;gap:14px;padding:15px 18px;border-radius:16px;margin-bottom:8px;background:#fffef9;border:2px solid #e2f0e4;cursor:pointer;transition:all .2s;font-size:16px}
+.task-item:hover{background:#f5fdf5;border-color:#c8f0d0;transform:translateX(3px)}
 .task-item.done{background:#ecfdf5;border-color:#a7f3d0}
-.task-item .checkbox{width:22px;height:22px;border-radius:6px;border:2px solid #d1d5db;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px}
-.task-item.done .checkbox{background:var(--succ);border-color:var(--succ);color:#fff}
-.task-item .task-name{flex:1;font-size:14px}
-.task-item.done .task-name{color:var(--txt2);text-decoration:line-through}
-.progress-bar{height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden;flex:1;min-width:60px}
-.progress-bar .fill{height:100%;border-radius:4px;transition:width .3s}
-.fill.good{background:var(--succ)}.fill.mid{background:var(--warn)}.fill.low{background:var(--dang)}
-.emp-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd);flex-wrap:wrap}
-.emp-row .ename{font-weight:600;font-size:14px;min-width:70px}.emp-row .erole{font-size:12px;color:var(--txt2);min-width:60px}
-.emp-row .epct{font-size:13px;font-weight:600;min-width:36px;text-align:right}
+.task-item .cb{width:28px;height:28px;border-radius:50%;border:2.5px solid #d1d5db;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;transition:all .2s}
+.task-item.done .cb{background:var(--s);border-color:var(--s);color:#fff;box-shadow:0 2px 8px rgba(16,185,129,.3)}
+.task-item .tn{flex:1;font-size:16px;font-weight:500}
+.task-item.done .tn{color:var(--t2);text-decoration:line-through}
+.task-item .tw{font-size:13px;color:#ff9a6c;font-weight:700;background:#fff5f0;padding:4px 10px;border-radius:50px;white-space:nowrap}
+
+/* Progress bars */
+.progress-bar{height:10px;background:#e8f0e9;border-radius:50px;overflow:hidden;flex:1;min-width:60px}
+.progress-bar .fill{height:100%;border-radius:50px;transition:width .3s}
+.fill.hi{background:linear-gradient(135deg,#87D19E,#a8e6b0)}
+.fill.mi{background:linear-gradient(135deg,#ffe8b0,#ffd97a)}
+.fill.lo{background:linear-gradient(135deg,#ffd4d4,#ffb0b0)}
+
+.emp-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid #f0f5f1;flex-wrap:wrap}
+.emp-row .ename{font-weight:700;font-size:16px;min-width:80px}
+.emp-row .erole{font-size:12px;color:#87D19E;font-weight:600;min-width:70px;background:#f0faf2;padding:4px 12px;border-radius:50px}
+.emp-row .epct{font-size:15px;font-weight:700;min-width:40px;text-align:right}
+
 .tbl-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th,td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--bd);white-space:nowrap}
-th{background:#f9fafb;font-weight:600;font-size:11px;color:var(--txt2)}
-tr:hover{background:#f9fafb}
-select,input[type=date]{padding:8px 10px;border:1px solid var(--bd);border-radius:8px;font-size:13px;background:#fff}
-select:focus{outline:none;border-color:var(--pri)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px 8px;text-align:center;border-bottom:1px solid #f0f5f1;white-space:nowrap}
+th{background:#f5fdf5;font-weight:700;font-size:13px;color:var(--t2)}
+tr:hover{background:#fafff7}
+select,input[type=date]{padding:10px 16px;border:2px solid #e2f0e4;border-radius:50px;font-size:14px;background:#fffef9;font-weight:500;color:#3d5a40}
+select:focus,input:focus{outline:none;border-color:#87D19E}
+
 .page{display:none}.page.active{display:block}
-.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center;padding:16px}
-.modal{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:440px;box-shadow:0 16px 48px rgba(0,0,0,.2)}
-.modal h3{margin-bottom:16px}
-@media(max-width:500px){.stats{grid-template-columns:repeat(2,1fr)}th,td{padding:6px 4px;font-size:11px}}
+
+/* Cute modals */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(61,90,64,.3);z-index:100;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)}
+.modal{background:#fffef9;border-radius:24px;padding:30px 26px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.1);border:1px solid #f0f5f1}
+.modal h3{font-size:18px;margin-bottom:20px;color:#3d5a40}
+.modal .field{margin-bottom:14px}
+.modal .field label{display:block;font-size:14px;font-weight:600;margin-bottom:4px;color:#4a6b4d}
+.modal .field input,.modal .field select{width:100%;padding:13px 16px;border:2px solid #e2f0e4;border-radius:14px;font-size:15px;background:#fafff7;color:#3d5a40}
+.modal .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.modal .btns button{padding:10px 24px;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.modal .btns button:hover{transform:scale(1.03)}
+
+@media(max-width:500px){.stats{grid-template-columns:repeat(2,1fr)}.login-card{padding:32px 22px}.task-item{font-size:14px;padding:12px 14px}}
 </style>
 </head>
 <body>
 
 <div class="login-page" id="loginPage">
+<div class="lf1"></div><div class="lf2"></div><div class="lf3"></div>
 <div class="login-card">
-<h1>🥬 生鲜配送</h1><div class="sub">每日任务追踪系统</div>
-<input type="text" id="loginName" placeholder="请输入姓名" autocomplete="off">
-<input type="password" id="loginPass" placeholder="请输入密码" autocomplete="off">
+<div style="text-align:center"><div class="logo">🥬</div></div>
+<h1>公司绩效薪酬统计</h1>
+<div class="sub">生鲜配送 · 每日任务追踪</div>
+<div class="field"><label>👤 姓名</label><input type="text" id="loginName" placeholder="请输入您的姓名" autocomplete="off"></div>
+<div class="field"><label>🔒 密码</label><input type="password" id="loginPass" placeholder="请输入密码" autocomplete="off"></div>
 <div class="err" id="loginErr">姓名或密码错误</div>
-<button class="login-btn" onclick="doLogin()">登 录</button>
-<div class="hint">初始密码均为 123456</div>
+<button class="login-btn" onclick="doLogin()">🥬 进 入 系 统</button>
+<div class="hint">🔑 初始密码均为 123456 · 登录后请修改</div>
 </div>
 </div>
 
 <div class="app" id="mainApp">
 <div class="header">
-<div><div class="t">🥬 任务追踪</div><div class="u" id="userLabel"></div></div>
-<button class="out" onclick="doLogout()">退出</button>
+<div><div class="t">🥬 公司绩效薪酬统计</div><div class="u" id="userLabel"></div></div>
+<div class="btns"><button class="pw" onclick="openChangePass()">🔑 改密码</button><button class="out" onclick="doLogout()">🚪 退出</button></div>
 </div>
 <div class="tabs" id="tabBar"></div>
 
@@ -81,307 +134,89 @@ select:focus{outline:none;border-color:var(--pri)}
 <div class="today-label" id="todayLabel"></div><div id="myTaskList"></div>
 </div>
 <div class="page" id="page-mystats">
-<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-<select id="myPeriod" onchange="renderMyStats()"><option value="week">本周</option><option value="month">本月</option></select>
+<div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+<select id="myPeriod" onchange="renderMyStats()"><option value="week">📅 本周</option><option value="month">📆 本月</option></select>
 </div>
 <div class="stats" id="myStatsGrid"></div>
 <div class="card"><h3>📋 每日完成明细</h3><div class="tbl-wrap"><table id="myStatsTable"></table></div></div>
 </div>
 <div class="page" id="page-overview">
 <div class="stats" id="overviewStats"></div>
-<div class="card"><h3>📊 本周全员完成进度</h3><div id="teamProgress"></div></div>
+<div class="card"><h3>📊 全员完成进度</h3><div id="teamProgress"></div></div>
 </div>
 <div class="page" id="page-team">
-<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
-<select id="teamPeriod" onchange="renderTeamView()"><option value="day">今日</option><option value="week" selected>本周</option><option value="month">本月</option></select>
-<select id="teamRole" onchange="renderTeamView()"><option value="all">全部岗位</option></select>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+<select id="teamPeriod" onchange="renderTeamView()"><option value="day">📌 今日</option><option value="week" selected>📅 本周</option><option value="month">📆 本月</option></select>
+<select id="teamRole" onchange="renderTeamView()"><option value="all">🌿 全部岗位</option></select>
 </div>
 <div id="teamDetail"></div>
 </div>
 <div class="page" id="page-admin">
 <div class="card"><h3>👥 员工管理</h3>
-<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-<button style="padding:6px 12px;background:var(--pri);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer" onclick="openAddEmp()">+ 添加员工</button>
-<button style="padding:6px 12px;background:#fff;border:1px solid var(--bd);border-radius:6px;font-size:12px;cursor:pointer" onclick="resetAllPasswords()">重置全部密码</button>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+<button style="padding:10px 20px;background:linear-gradient(135deg,#87D19E,#a8e6b0);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 3px 12px rgba(135,209,158,.25)" onclick="openAddEmp()">✨ 添加员工</button>
+<button style="padding:10px 20px;background:#fff;border:2px solid #e2f0e4;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;color:#7a9a7e" onclick="resetAllPasswords()">🔄 重置密码</button>
 </div>
 <div class="tbl-wrap"><table id="adminEmpTable"></table></div>
 </div>
 </div>
 </div>
 
+<div class="modal-overlay" id="passModal">
+<div class="modal"><h3>🔑 修改密码</h3>
+<div class="field"><label>原密码</label><input type="password" id="oldPass" placeholder="输入原密码"></div>
+<div class="field"><label>新密码</label><input type="password" id="newPass1" placeholder="输入新密码"></div>
+<div class="field"><label>确认密码</label><input type="password" id="newPass2" placeholder="再次输入"></div>
+<div class="btns"><button onclick="closePassModal()" style="background:#fff;border:2px solid #e2f0e4;color:#7a9a7e">取消</button><button onclick="doChangePass()" style="background:linear-gradient(135deg,#87D19E,#a8e6b0);color:#fff;border:none">✅ 确认</button></div>
+</div></div>
+
 <div class="modal-overlay" id="empModal">
-<div class="modal">
-<h3 id="empModalTitle">添加员工</h3>
-<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px">
-<div style="flex:1;min-width:120px"><label style="font-size:12px;color:var(--txt2);display:block;margin-bottom:2px">姓名</label><input id="eName" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:6px"></div>
-<div style="flex:1;min-width:120px"><label style="font-size:12px;color:var(--txt2);display:block;margin-bottom:2px">岗位</label><select id="eRole" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:6px"></select></div>
-</div>
-<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px">
-<div style="flex:1;min-width:120px"><label style="font-size:12px;color:var(--txt2);display:block;margin-bottom:2px">密码</label><input id="ePass" value="123456" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:6px"></div>
-<div style="flex:1;min-width:120px"><label style="font-size:12px;color:var(--txt2);display:block;margin-bottom:2px">手机号</label><input id="ePhone" placeholder="选填" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:6px"></div>
-</div>
-<div style="display:flex;gap:8px;justify-content:flex-end">
-<button style="padding:8px 16px;border:1px solid var(--bd);border-radius:8px;background:#fff;cursor:pointer" onclick="closeEmpModal()">取消</button>
-<button style="padding:8px 16px;border:none;border-radius:8px;background:var(--pri);color:#fff;cursor:pointer" onclick="saveEmp()">保存</button>
-</div>
-</div>
-</div>
+<div class="modal"><h3 id="empModalTitle">✨ 添加员工</h3>
+<div class="field"><label>姓名</label><input id="eName" placeholder="请输入姓名"></div>
+<div class="field"><label>岗位</label><select id="eRole"></select></div>
+<div class="field"><label>密码</label><input id="ePass" value="123456"></div>
+<div class="field"><label>手机号（选填）</label><input id="ePhone" placeholder="选填"></div>
+<div class="btns"><button onclick="closeEmpModal()" style="background:#fff;border:2px solid #e2f0e4;color:#7a9a7e">取消</button><button onclick="saveEmp()" style="background:linear-gradient(135deg,#87D19E,#a8e6b0);color:#fff;border:none">💾 保存</button></div>
+</div></div>
 
 <script>
-var ROLES=["采购员","分拣员","配送司机","销售经理","库管","会计","下单员","主管经理","老板"];
-var currentUser=null,roleTasks={},employees=[],completions={},editingEmpId=null;
+var ROLES=["老板","总负责人","财务经理","财务核算岗","出纳","商务专员","客户经理岗","蔬菜采购","预包装采购","早班库管","晚班库管","信息岗","分拣","分拣主管","司机","配送主管","标书专员"];
+var currentUser=null,roleTasks={},kpiWeights={},employees=[],completions={},editingEmpId=null;
 
 function dateStr(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
-function getWeekDays(){
-  var now=new Date(),day=now.getDay()||7;
-  var mon=new Date(now);mon.setDate(now.getDate()-day+1);
-  var sun=new Date(now);sun.setDate(now.getDate()-day+7);
-  var d=new Date(mon),days=[];
-  while(d<=sun){if(d.getDay()!==0)days.push(dateStr(d));d.setDate(d.getDate()+1);}
-  return days;
-}
-function getMonthDays(){
-  var now=new Date(),days=[];
-  var start=new Date(now.getFullYear(),now.getMonth(),1);
-  var end=new Date(now.getFullYear(),now.getMonth()+1,0);
-  var d=new Date(start);
-  while(d<=end){if(d.getDay()!==0)days.push(dateStr(d));d.setDate(d.getDate()+1);}
-  return days;
-}
-function getCompletion(empId,date,taskIdx){
-  if(!completions[empId])return false;
-  if(!completions[empId][date])return false;
-  return !!completions[empId][date][taskIdx];
-}
-function getDayRate(empId,date){
-  var tasks=roleTasks[employees[empId].role]||[];
-  if(tasks.length===0)return 100;
-  var done=0;tasks.forEach(function(_,i){if(getCompletion(empId,date,i))done++;});
-  return Math.round(done/tasks.length*100);
-}
+function getWeekDays(){var n=new Date(),day=n.getDay()||7;var m=new Date(n);m.setDate(n.getDate()-day+1);var s=new Date(n);s.setDate(n.getDate()-day+7);var d=new Date(m),days=[];while(d<=s){if(d.getDay()!==0)days.push(dateStr(d));d.setDate(d.getDate()+1);}return days;}
+function getMonthDays(){var n=new Date(),days=[];var s=new Date(n.getFullYear(),n.getMonth(),1);var e=new Date(n.getFullYear(),n.getMonth()+1,0);var d=new Date(s);while(d<=e){if(d.getDay()!==0)days.push(dateStr(d));d.setDate(d.getDate()+1);}return days;}
+function getCompletion(empId,date,taskIdx){return !!(completions[empId]&&completions[empId][date]&&completions[empId][date][taskIdx]);}
 
-// ---- API calls ----
-async function api(url,opts){
-  opts=opts||{};
-  var headers=opts.headers||{};
-  if(opts.body){headers["Content-Type"]="application/json";opts.body=JSON.stringify(opts.body);}
-  var res=await fetch(url,{method:opts.method||"GET",headers:headers,body:opts.body});
-  return res.json();
-}
+async function api(url,opts){opts=opts||{};var h=opts.headers||{};if(opts.body){h["Content-Type"]="application/json";opts.body=JSON.stringify(opts.body);}var r=await fetch(url,{method:opts.method||"GET",headers:h,body:opts.body});return r.json();}
+async function loadInit(){var d=await api("/api/init");roleTasks=d.tasks;kpiWeights=d.kpiWeights||{};employees=d.employees;completions=d.completions||{};}
 
-async function loadInit(){
-  var data=await api("/api/init");
-  roleTasks=data.tasks;employees=data.employees;completions=data.completions||{};
-}
-async function doLogin(){
-  var name=document.getElementById("loginName").value.trim();
-  var pass=document.getElementById("loginPass").value.trim();
-  if(!name||!pass){showErr("请输入姓名和密码");return;}
-  var res=await api("/api/login",{method:"POST",body:{name:name,pass:pass}});
-  if(!res.ok){showErr(res.msg);return;}
-  currentUser={empId:res.empId,role:res.role,name:res.name};
-  await loadInit();
-  document.getElementById("loginPage").style.display="none";
-  document.getElementById("mainApp").style.display="block";
-  setupTabs();renderUserLabel();showFirstTab();
-}
+async function doLogin(){var nm=document.getElementById("loginName").value.trim(),pw=document.getElementById("loginPass").value.trim();if(!nm||!pw){showErr("请输入姓名和密码");return;}var res=await api("/api/login",{method:"POST",body:{name:nm,pass:pw}});if(!res.ok){showErr(res.msg);return;}currentUser={empId:res.empId,role:res.role,name:res.name};await loadInit();document.getElementById("loginPage").style.display="none";document.getElementById("mainApp").style.display="block";setupTabs();renderUserLabel();showFirstTab();}
 function showErr(msg){var e=document.getElementById("loginErr");e.textContent=msg;e.style.display="block";setTimeout(function(){e.style.display="none";},2500);}
-function doLogout(){currentUser=null;document.getElementById("loginPage").style.display="flex";document.getElementById("mainApp").style.display="none";document.getElementById("loginName").value="";document.getElementById("loginPass").value="";}
+function doLogout(){currentUser=null;document.getElementById("loginPage").style.display="flex";document.getElementById("mainApp").style.display="none";}
 function renderUserLabel(){var e=employees[currentUser.empId];document.getElementById("userLabel").textContent=e.name+" | "+e.role;}
 
-function setupTabs(){
-  var bar=document.getElementById("tabBar"),tabs=[];
-  var role=currentUser.role;
-  if(role==="主管经理"||role==="老板"){
-    tabs.push({id:"overview",label:"总览"});
-    tabs.push({id:"team",label:"团队详情"});
-    tabs.push({id:"admin",label:"员工管理"});
-  }
-  tabs.push({id:"mytasks",label:"今日任务"});
-  tabs.push({id:"mystats",label:"我的统计"});
-  bar.innerHTML=tabs.map(function(t,i){return '<button class="'+(i===0?"active":"")+'" onclick="switchTab(\''+t.id+"',this)\">"+t.label+"</button>";}).join("");
-}
-function switchTab(tabId,btn){
-  document.querySelectorAll(".tabs button").forEach(function(b){b.classList.remove("active");});
-  btn.classList.add("active");
-  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
-  var page=document.getElementById("page-"+tabId);if(page)page.classList.add("active");
-  if(tabId==="mytasks")renderMyTasks();
-  if(tabId==="mystats")renderMyStats();
-  if(tabId==="overview")renderOverview();
-  if(tabId==="team")renderTeamView();
-  if(tabId==="admin")renderAdmin();
-}
-function showFirstTab(){var first=document.querySelector(".tabs button");if(first)first.click();}
-function renderMyTasks(){
-  var today=dateStr(new Date());
-  var dow=["日","一","二","三","四","五","六"];
-  document.getElementById("todayLabel").textContent="📅 "+today+" 星期"+dow[new Date().getDay()];
-  var tasks=roleTasks[currentUser.role]||[];
-  var html="";
-  tasks.forEach(function(t,i){
-    var done=getCompletion(currentUser.empId,today,i);
-    html+='<div class="task-item'+(done?" done":"")+'" onclick="toggleTask('+i+')">';
-    html+='<div class="checkbox">'+(done?"✓":"")+'</div>';
-    html+='<div class="task-name">'+t+'</div></div>';
-  });
-  if(tasks.length===0)html='<p style="text-align:center;color:var(--txt2);padding:30px">暂无任务</p>';
-  document.getElementById("myTaskList").innerHTML=html;
-}
-async function toggleTask(taskIdx){
-  var today=dateStr(new Date());
-  var res=await api("/api/toggle",{method:"POST",body:{empId:currentUser.empId,date:today,taskIdx:taskIdx}});
-  if(!completions[currentUser.empId])completions[currentUser.empId]={};
-  if(!completions[currentUser.empId][today])completions[currentUser.empId][today]={};
-  if(res.completed)completions[currentUser.empId][today][taskIdx]=true;
-  else delete completions[currentUser.empId][today][taskIdx];
-  renderMyTasks();
-}
+function setupTabs(){var bar=document.getElementById("tabBar"),tabs=[],r=currentUser.role;if(r==="总负责人"||r==="老板"){tabs.push({id:"overview",label:"📊 总览"});tabs.push({id:"team",label:"👥 团队"});tabs.push({id:"admin",label:"⚙️ 管理"});}tabs.push({id:"mytasks",label:"📝 任务"});tabs.push({id:"mystats",label:"📈 统计"});bar.innerHTML=tabs.map(function(t,i){return '<button class="'+(i===0?"active":"")+'" onclick="switchTab(\''+t.id+"',this)\">"+t.label+"</button>";}).join("");}
+function switchTab(tabId,btn){document.querySelectorAll(".tabs button").forEach(function(b){b.classList.remove("active");});btn.classList.add("active");document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});var pg=document.getElementById("page-"+tabId);if(pg)pg.classList.add("active");if(tabId==="mytasks")renderMyTasks();if(tabId==="mystats")renderMyStats();if(tabId==="overview")renderOverview();if(tabId==="team")renderTeamView();if(tabId==="admin")renderAdmin();}
+function showFirstTab(){var f=document.querySelector(".tabs button");if(f)f.click();}
 
-function renderMyStats(){
-  var period=document.getElementById("myPeriod").value;
-  var days=period==="week"?getWeekDays():getMonthDays();
-  var tasks=roleTasks[currentUser.role]||[];
-  var totalTasks=tasks.length*days.length;
-  var doneTasks=0;
-  days.forEach(function(d){tasks.forEach(function(_,i){if(getCompletion(currentUser.empId,d,i))doneTasks++;});});
-  var rate=totalTasks>0?Math.round(doneTasks/totalTasks*100):0;
-  document.getElementById("myStatsGrid").innerHTML=
-    '<div class="stat"><div class="n">'+rate+'%</div><div class="l">完成率</div></div>'+
-    '<div class="stat"><div class="n">'+doneTasks+'</div><div class="l">已完成任务</div></div>'+
-    '<div class="stat"><div class="n">'+(totalTasks-doneTasks)+'</div><div class="l">未完成任务</div></div>'+
-    '<div class="stat"><div class="n">'+days.length+'</div><div class="l">工作天数</div></div>';
-  var tbl='<table><thead><tr><th>日期</th><th>完成数</th><th>完成率</th><th>状态</th></tr></thead><tbody>';
-  var today=dateStr(new Date());
-  days.forEach(function(d){
-    if(d>today)return;
-    var done=0;tasks.forEach(function(_,i){if(getCompletion(currentUser.empId,d,i))done++;});
-    var r=tasks.length>0?Math.round(done/tasks.length*100):0;
-    var cls=r>=80?"good":(r>=50?"mid":"low");
-    tbl+='<tr><td>'+d+'</td><td>'+done+'/'+tasks.length+'</td><td><div style="display:flex;align-items:center;gap:6px"><div class="progress-bar"><div class="fill '+cls+'" style="width:'+r+'%"></div></div>'+r+'%</div></td><td>'+(r>=80?"✅":(r>=50?"⚠️":"❌"))+'</td></tr>';
-  });
-  tbl+='</tbody></table>';
-  document.getElementById("myStatsTable").innerHTML=days.length?tbl:'<p style="text-align:center;padding:20px;color:var(--txt2)">暂无数据</p>';
-}
-function renderOverview(){
-  var week=getWeekDays(),today=dateStr(new Date());
-  var allDone=0,allTotal=0,empList=[];
-  employees.forEach(function(e,i){
-    var tasks=roleTasks[e.role]||[];
-    var periodDone=0,periodTotal=tasks.length*week.length;
-    week.forEach(function(d){if(d>today)periodTotal-=tasks.length;else tasks.forEach(function(_,ti){if(getCompletion(i,d,ti))periodDone++;});});
-    allDone+=periodDone;allTotal+=periodTotal;
-    var rate=periodTotal>0?Math.round(periodDone/periodTotal*100):0;
-    empList.push({id:i,name:e.name,role:e.role,rate:rate,done:periodDone,total:periodTotal});
-  });
-  var overallRate=allTotal>0?Math.round(allDone/allTotal*100):0;
-  empList.sort(function(a,b){return b.rate-a.rate;});
-  document.getElementById("overviewStats").innerHTML=
-    '<div class="stat"><div class="n">'+overallRate+'%</div><div class="l">团队完成率</div></div>'+
-    '<div class="stat"><div class="n">'+allDone+'</div><div class="l">已完成任务</div></div>'+
-    '<div class="stat"><div class="n">'+employees.length+'</div><div class="l">团队人数</div></div>'+
-    '<div class="stat"><div class="n">'+empList.filter(function(e){return e.rate>=80;}).length+'</div><div class="l">达标人数(≥80%)</div></div>';
-  var html='';
-  empList.forEach(function(e){
-    var cls=e.rate>=80?"good":(e.rate>=50?"mid":"low");
-    html+='<div class="emp-row"><div class="ename">'+e.name+'</div><div class="erole">'+e.role+'</div><div class="progress-bar" style="max-width:200px"><div class="fill '+cls+'" style="width:'+e.rate+'%"></div></div><div class="epct">'+e.rate+'%</div><div style="font-size:11px;color:var(--txt2)">'+e.done+'/'+e.total+'</div></div>';
-  });
-  document.getElementById("teamProgress").innerHTML=html||'<p style="text-align:center;padding:20px;color:var(--txt2)">暂无数据</p>';
-}
-
-function renderTeamView(){
-  var period=document.getElementById("teamPeriod").value;
-  var role=document.getElementById("teamRole").value;
-  var days=period==="day"?[dateStr(new Date())]:(period==="week"?getWeekDays():getMonthDays());
-  var today=dateStr(new Date());days=days.filter(function(d){return d<=today;});
-  var list=employees.map(function(e,i){return Object.assign({},e,{id:i});});
-  if(role!=="all")list=list.filter(function(e){return e.role===role;});
-  var html='<table><thead><tr><th>姓名</th><th>岗位</th>';
-  days.forEach(function(d){html+='<th>'+d.slice(5)+'</th>';});
-  html+='<th>完成率</th></tr></thead><tbody>';
-  list.forEach(function(e){
-    var tasks=roleTasks[e.role]||[];
-    html+='<tr><td><strong>'+e.name+'</strong></td><td>'+e.role+'</td>';
-    var totalDone=0,totalAll=0;
-    days.forEach(function(d){
-      var done=0;tasks.forEach(function(_,i){if(getCompletion(e.id,d,i))done++;});
-      totalDone+=done;totalAll+=tasks.length;
-      var r=tasks.length>0?Math.round(done/tasks.length*100):0;
-      html+='<td><div style="display:flex;align-items:center;gap:4px;justify-content:center"><div class="progress-bar" style="width:40px"><div class="fill '+(r>=80?"good":(r>=50?"mid":"low"))+'" style="width:'+r+'%"></div></div><span style="font-size:10px">'+r+'%</span></div></td>';
-    });
-    html+='<td><strong>'+(totalAll>0?Math.round(totalDone/totalAll*100):0)+'%</strong></td></tr>';
-  });
-  html+='</tbody></table>';
-  document.getElementById("teamDetail").innerHTML=list.length?html:'<p style="text-align:center;padding:20px;color:var(--txt2)">暂无数据</p>';
-  var rsel=document.getElementById("teamRole");
-  rsel.innerHTML='<option value="all">全部岗位</option>'+ROLES.map(function(r){return '<option value="'+r+'">'+r+"</option>";}).join("");
-  rsel.value=role;
-}
-async function renderAdmin(){
-  var list=await api("/api/employees");
-  employees=list;
-  var week=getWeekDays();
-  var html='<table><thead><tr><th>姓名</th><th>岗位</th><th>密码</th><th>手机号</th><th>本周完成率</th><th>操作</th></tr></thead><tbody>';
-  list.forEach(function(e,i){
-    var tasks=roleTasks[e.role]||[];
-    var dayCount=0,doneCount=0;
-    var today=dateStr(new Date());
-    week.forEach(function(d){
-      if(d>today)return;
-      dayCount+=tasks.length;
-      tasks.forEach(function(_,ti){if(getCompletion(i,d,ti))doneCount++;});
-    });
-    var rate=dayCount>0?Math.round(doneCount/dayCount*100):0;
-    html+='<tr><td><strong>'+e.name+'</strong></td><td>'+e.role+'</td><td>'+e.pass+'</td><td>'+e.phone+'</td>'+
-    '<td><div style="display:flex;align-items:center;gap:4px;justify-content:center"><div class="progress-bar" style="width:60px"><div class="fill '+(rate>=80?"good":(rate>=50?"mid":"low"))+'" style="width:'+rate+'%"></div></div>'+rate+'%</div></td>'+
-    '<td><button style="padding:4px 10px;border:1px solid var(--bd);border-radius:4px;background:#fff;font-size:11px;cursor:pointer" onclick="openEditEmp('+i+')">编辑</button> '+
-    '<button style="padding:4px 10px;border:1px solid #fecaca;border-radius:4px;background:#fff;color:var(--dang);font-size:11px;cursor:pointer" onclick="deleteEmp('+i+')">删除</button></td></tr>';
-  });
-  html+='</tbody></table>';
-  document.getElementById("adminEmpTable").innerHTML=html;
-}
-
-function openAddEmp(){
-  editingEmpId=null;
-  document.getElementById("empModalTitle").textContent="添加员工";
-  document.getElementById("eName").value="";document.getElementById("ePass").value="123456";document.getElementById("ePhone").value="";
-  document.getElementById("eRole").innerHTML=ROLES.map(function(r){return '<option value="'+r+'">'+r+"</option>";}).join("");
-  document.getElementById("empModal").style.display="flex";
-}
-function openEditEmp(id){
-  editingEmpId=id;var e=employees[id];
-  document.getElementById("empModalTitle").textContent="编辑员工";
-  document.getElementById("eName").value=e.name;document.getElementById("ePass").value=e.pass;document.getElementById("ePhone").value=e.phone;
-  document.getElementById("eRole").innerHTML=ROLES.map(function(r){return '<option value="'+r+'"'+(r===e.role?" selected":"")+'>'+r+"</option>";}).join("");
-  document.getElementById("empModal").style.display="flex";
-}
+function openChangePass(){document.getElementById("passModal").style.display="flex";}
+function closePassModal(){document.getElementById("passModal").style.display="none";}
+async function doChangePass(){var o=document.getElementById("oldPass").value,n1=document.getElementById("newPass1").value,n2=document.getElementById("newPass2").value;if(!o||!n1||!n2){alert("请填写完整");return;}if(n1!==n2){alert("两次新密码不一致");return;}if(n1.length<4){alert("密码至少4位");return;}var res=await api("/api/change-pass",{method:"POST",body:{empId:currentUser.empId,oldPass:o,newPass:n1}});if(!res.ok){alert(res.msg);return;}alert("密码修改成功！");closePassModal();}
+function renderMyTasks(){var today=dateStr(new Date()),dow=["日","一","二","三","四","五","六"];document.getElementById("todayLabel").textContent="📅 "+today+" 星期"+dow[new Date().getDay()];var tasks=roleTasks[currentUser.role]||[],weights=kpiWeights[currentUser.role]||{};var html="";tasks.forEach(function(t,i){var done=getCompletion(currentUser.empId,today,i),w=weights[t]||0;html+='<div class="task-item'+(done?" done":"")+'" onclick="toggleTask('+i+')"><div class="cb">'+(done?"✓":"")+'</div><div class="tn">'+t+'</div>';if(w)html+='<div class="tw">'+w+'%</div>';html+='</div>';});if(tasks.length===0)html='<p style="text-align:center;color:var(--t2);padding:30px;font-size:15px">🍃 暂无任务</p>';document.getElementById("myTaskList").innerHTML=html;}
+async function toggleTask(taskIdx){var today=dateStr(new Date());var res=await api("/api/toggle",{method:"POST",body:{empId:currentUser.empId,date:today,taskIdx:taskIdx}});if(!completions[currentUser.empId])completions[currentUser.empId]={};if(!completions[currentUser.empId][today])completions[currentUser.empId][today]={};if(res.completed)completions[currentUser.empId][today][taskIdx]=true;else delete completions[currentUser.empId][today][taskIdx];renderMyTasks();}
+function renderMyStats(){var period=document.getElementById("myPeriod").value,days=period==="week"?getWeekDays():getMonthDays();var tasks=roleTasks[currentUser.role]||[],tt=tasks.length*days.length,dt=0;days.forEach(function(d){tasks.forEach(function(_,i){if(getCompletion(currentUser.empId,d,i))dt++;});});var rate=tt>0?Math.round(dt/tt*100):0;document.getElementById("myStatsGrid").innerHTML='<div class="stat"><div class="n">'+rate+'%</div><div class="l">完成率</div></div><div class="stat"><div class="n">'+dt+'</div><div class="l">✅ 已完成</div></div><div class="stat"><div class="n">'+(tt-dt)+'</div><div class="l">⏳ 未完成</div></div><div class="stat"><div class="n">'+days.length+'</div><div class="l">📅 天数</div></div>';var tbl='<table><thead><tr><th>日期</th><th>完成</th><th>进度</th><th></th></tr></thead><tbody>',today=dateStr(new Date());days.forEach(function(d){if(d>today)return;var done=0;tasks.forEach(function(_,i){if(getCompletion(currentUser.empId,d,i))done++;});var r=tasks.length>0?Math.round(done/tasks.length*100):0;tbl+='<tr><td>'+d+'</td><td>'+done+'/'+tasks.length+'</td><td><div style="display:flex;align-items:center;gap:6px"><div class="progress-bar"><div class="fill '+(r>=80?"hi":(r>=50?"mi":"lo"))+'" style="width:'+r+'%"></div></div>'+r+'%</div></td><td>'+(r>=80?"✅":(r>=50?"⚠️":"❌"))+'</td></tr>';});tbl+='</tbody></table>';document.getElementById("myStatsTable").innerHTML=tbl;}
+function renderOverview(){var week=getWeekDays(),today=dateStr(new Date()),ad=0,at=0,el=[];employees.forEach(function(e,i){var tasks=roleTasks[e.role]||[],pd=0,pt=tasks.length*week.length;week.forEach(function(d){if(d>today)pt-=tasks.length;else tasks.forEach(function(_,ti){if(getCompletion(i,d,ti))pd++;});});ad+=pd;at+=pt;var r=pt>0?Math.round(pd/pt*100):0;el.push({id:i,name:e.name,role:e.role,rate:r,done:pd,total:pt});});var or=at>0?Math.round(ad/at*100):0;el.sort(function(a,b){return b.rate-a.rate;});document.getElementById("overviewStats").innerHTML='<div class="stat"><div class="n">'+or+'%</div><div class="l">🌿 团队完成率</div></div><div class="stat"><div class="n">'+ad+'</div><div class="l">✅ 已完成</div></div><div class="stat"><div class="n">'+employees.length+'</div><div class="l">👥 团队人数</div></div><div class="stat"><div class="n">'+el.filter(function(e){return e.rate>=80;}).length+'</div><div class="l">⭐ 达标≥80%</div></div>';var html='';el.forEach(function(e){html+='<div class="emp-row"><div class="ename">'+e.name+'</div><div class="erole">'+e.role+'</div><div class="progress-bar" style="max-width:220px"><div class="fill '+(e.rate>=80?"hi":(e.rate>=50?"mi":"lo"))+'" style="width:'+e.rate+'%"></div></div><div class="epct">'+e.rate+'%</div><div style="font-size:12px;color:var(--t2)">'+e.done+'/'+e.total+'</div></div>';});document.getElementById("teamProgress").innerHTML=html||'<p style="text-align:center;padding:20px;color:var(--t2)">🍃 暂无数据</p>';}
+function renderTeamView(){var period=document.getElementById("teamPeriod").value,role=document.getElementById("teamRole").value;var days=period==="day"?[dateStr(new Date())]:(period==="week"?getWeekDays():getMonthDays()),today=dateStr(new Date());days=days.filter(function(d){return d<=today;});var list=employees.map(function(e,i){return Object.assign({},e,{id:i});});if(role!=="all")list=list.filter(function(e){return e.role===role;});var html='<table><thead><tr><th style="text-align:left;padding-left:10px">姓名</th><th>岗位</th>';days.forEach(function(d){html+='<th>'+d.slice(5)+'</th>';});html+='<th>完成率</th></tr></thead><tbody>';list.forEach(function(e){var tasks=roleTasks[e.role]||[];html+='<tr><td style="text-align:left;padding-left:10px"><strong>'+e.name+'</strong></td><td>'+e.role+'</td>';var td=0,ta=0;days.forEach(function(d){var done=0;tasks.forEach(function(_,i){if(getCompletion(e.id,d,i))done++;});td+=done;ta+=tasks.length;var r=tasks.length>0?Math.round(done/tasks.length*100):0;html+='<td><div style="display:flex;align-items:center;gap:3px;justify-content:center"><div class="progress-bar" style="width:36px"><div class="fill '+(r>=80?"hi":(r>=50?"mi":"lo"))+'" style="width:'+r+'%"></div></div><span style="font-size:11px">'+r+'%</span></div></td>';});html+='<td><strong>'+(ta>0?Math.round(td/ta*100):0)+'%</strong></td></tr>';});html+='</tbody></table>';document.getElementById("teamDetail").innerHTML=list.length?html:'<p style="text-align:center;padding:20px;color:var(--t2)">🍃 暂无数据</p>';var rs=document.getElementById("teamRole");rs.innerHTML='<option value="all">🌿 全部岗位</option>'+ROLES.map(function(r){return '<option value="'+r+'">'+r+"</option>";}).join("");rs.value=role;}
+async function renderAdmin(){var list=await api("/api/employees");employees=list;var week=getWeekDays(),today=dateStr(new Date());var html='<table><thead><tr><th>姓名</th><th>岗位</th><th>密码</th><th>本周</th><th>操作</th></tr></thead><tbody>';list.forEach(function(e,i){var tasks=roleTasks[e.role]||[],dc=0,tc=0;week.forEach(function(d){if(d>today)return;tc+=tasks.length;tasks.forEach(function(_,ti){if(getCompletion(i,d,ti))dc++;});});var r=tc>0?Math.round(dc/tc*100):0;html+='<tr><td><strong>'+e.name+'</strong></td><td>'+e.role+'</td><td>'+e.pass+'</td><td><div style="display:flex;align-items:center;gap:4px;justify-content:center"><div class="progress-bar" style="width:56px"><div class="fill '+(r>=80?"hi":(r>=50?"mi":"lo"))+'" style="width:'+r+'%"></div></div>'+r+'%</div></td><td><button style="padding:5px 14px;border:2px solid #e2f0e4;border-radius:50px;background:#fff;font-size:12px;font-weight:600;cursor:pointer" onclick="openEditEmp('+i+')">✏️</button> <button style="padding:5px 14px;border:2px solid #fecaca;border-radius:50px;background:#fff;color:var(--d);font-size:12px;font-weight:600;cursor:pointer" onclick="deleteEmp('+i+')">🗑️</button></td></tr>';});html+='</tbody></table>';document.getElementById("adminEmpTable").innerHTML=html;}
+function openAddEmp(){editingEmpId=null;document.getElementById("empModalTitle").textContent="✨ 添加员工";document.getElementById("eName").value="";document.getElementById("ePass").value="123456";document.getElementById("ePhone").value="";document.getElementById("eRole").innerHTML=ROLES.map(function(r){return '<option value="'+r+'">'+r+"</option>";}).join("");document.getElementById("empModal").style.display="flex";}
+function openEditEmp(id){editingEmpId=id;var e=employees[id];document.getElementById("empModalTitle").textContent="✏️ 编辑员工";document.getElementById("eName").value=e.name;document.getElementById("ePass").value=e.pass;document.getElementById("ePhone").value=e.phone;document.getElementById("eRole").innerHTML=ROLES.map(function(r){return '<option value="'+r+'"'+(r===e.role?" selected":"")+'>'+r+"</option>";}).join("");document.getElementById("empModal").style.display="flex";}
 function closeEmpModal(){document.getElementById("empModal").style.display="none";}
-
-async function saveEmp(){
-  var name=document.getElementById("eName").value.trim(),role=document.getElementById("eRole").value;
-  var pass=document.getElementById("ePass").value.trim(),phone=document.getElementById("ePhone").value.trim();
-  if(!name||!pass){alert("请填写姓名和密码");return;}
-  var data={name:name,role:role,pass:pass,phone:phone};
-  if(editingEmpId!==null){
-    await api("/api/employees/"+editingEmpId,{method:"PUT",body:data});
-  }else{
-    await api("/api/employees",{method:"POST",body:data});
-  }
-  await loadInit();closeEmpModal();renderAdmin();
-  if(document.getElementById("page-overview").classList.contains("active"))renderOverview();
-}
-async function deleteEmp(id){
-  if(!confirm("确定删除 "+employees[id].name+" 吗？此操作不可恢复。"))return;
-  await api("/api/employees/"+id,{method:"DELETE"});
-  await loadInit();renderAdmin();
-}
-async function resetAllPasswords(){
-  if(!confirm("确定将所有员工密码重置为 123456 吗？"))return;
-  await api("/api/reset-passwords",{method:"POST"});
-  await loadInit();renderAdmin();alert("全部密码已重置为 123456");
-}
-
+async function saveEmp(){var nm=document.getElementById("eName").value.trim(),rl=document.getElementById("eRole").value,pw=document.getElementById("ePass").value.trim(),ph=document.getElementById("ePhone").value.trim();if(!nm||!pw){alert("请填写姓名和密码");return;}var d={name:nm,role:rl,pass:pw,phone:ph};if(editingEmpId!==null){await api("/api/employees/"+editingEmpId,{method:"PUT",body:d});}else{await api("/api/employees",{method:"POST",body:d});}await loadInit();closeEmpModal();renderAdmin();if(document.getElementById("page-overview").classList.contains("active"))renderOverview();}
+async function deleteEmp(id){if(!confirm("确定删除 "+employees[id].name+" 吗？"))return;await api("/api/employees/"+id,{method:"DELETE"});await loadInit();renderAdmin();}
+async function resetAllPasswords(){if(!confirm("确定将全部密码重置为 123456 吗？"))return;await api("/api/reset-passwords",{method:"POST"});await loadInit();renderAdmin();alert("已重置");}
 (async function init(){await loadInit();})();
 </script>
 </body>
 </html>
+
