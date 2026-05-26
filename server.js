@@ -60,9 +60,9 @@ const MIME = { ".html": "text/html; charset=utf-8", ".js": "application/javascri
 
 function serveStatic(req, res) {
   let filePath = req.url === "/" ? "/index.html" : req.url;
-  filePath = path.join(__dirname, "public", filePath);
-  if (!filePath.startsWith(path.join(__dirname, "public"))) { res.writeHead(403); res.end(); return true; }
-  if (!fs.existsSync(filePath)) return false;
+  filePath = path.join(__dirname, filePath);
+  if (!filePath.startsWith(__dirname)) { res.writeHead(403); res.end(); return true; }
+  if (!fs.existsSync(filePath) || filePath.endsWith("data.json")) return false;
   const ext = path.extname(filePath);
   res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream" });
   fs.createReadStream(filePath).pipe(res);
@@ -204,3 +204,6 @@ server.listen(PORT, () => {
   console.log("   服务地址: http://localhost:" + PORT);
   console.log("   按 Ctrl+C 停止");
 });
+
+
+
