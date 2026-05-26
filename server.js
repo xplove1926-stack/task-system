@@ -7,8 +7,7 @@ const PORT = process.env.PORT || 3456;
 function loadData() { try { return JSON.parse(fs.readFileSync(DATA_FILE, "utf8")); } catch (_) { return null; } }
 function saveData(d) { if(d===null){try{fs.unlinkSync(DATA_FILE)}catch(_){}} else {fs.writeFileSync(DATA_FILE, JSON.stringify(d, null, 2), "utf8");} }
 
-function initData() { var d=loadData(); if(d&&d.employees&&d.employees.length<18){saveData(null);d=null;}
-  if (loadData()) return;
+function initData() { var d=loadData(); if(!d||!d._v||d._v!==2){ try{fs.unlinkSync(DATA_FILE)}catch(_){} d=null; } if(loadData()) return;
   const tasks = {
     "老板": ["查看团队日报","审批重要事项","客户关系维护","经营数据分析"],
     "总负责人": ["团队统筹协调","重大事项决策","部门绩效审核","对外联络对接"],
@@ -69,7 +68,7 @@ function initData() { var d=loadData(); if(d&&d.employees&&d.employees.length<18
     { name: "徐元", role: "配送主管", pass: "123456", phone: "" },{ name: "张世举", role: "司机", pass: "123456", phone: "" },{ name: "周青霞", role: "分拣主管", pass: "123456", phone: "" },{ name: "张莹", role: "分拣", pass: "123456", phone: "" }
   ];
 
-  saveData({ tasks, kpiWeights, employees, completions: {} });
+  saveData({ _v:2, tasks, kpiWeights, employees, completions: {} });
 }
 
 
@@ -175,13 +174,15 @@ const server = http.createServer(async (req, res) => {
     saveData(d); return json(res, { ok: true });
   }
 
-  res.writeHead(404); res.end("Not Found");
+  if(req.method==="GET"&&url==="/api/reset"){try{fs.unlinkSync(DATA_FILE)}catch(_){}initData();return json(res,{ok:true,msg:"数据已重置，请重新登录"});}res.writeHead(404);res.end("Not Found");
 });
 
 server.listen(PORT, () => {
   console.log("公司绩效薪酬统计");
   console.log("服务地址: http://localhost:" + PORT);
 });
+
+
 
 
 

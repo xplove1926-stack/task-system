@@ -191,9 +191,9 @@ function getCompletion(empId,date,taskIdx){return !!(completions[empId]&&complet
 async function api(url,opts){opts=opts||{};var h=opts.headers||{};if(opts.body){h["Content-Type"]="application/json";opts.body=JSON.stringify(opts.body);}var r=await fetch(url,{method:opts.method||"GET",headers:h,body:opts.body});return r.json();}
 async function loadInit(){var d=await api("/api/init");roleTasks=d.tasks;kpiWeights=d.kpiWeights||{};employees=d.employees;completions=d.completions||{};}
 
-async function doLogin(){var nm=document.getElementById("loginName").value.trim(),pw=document.getElementById("loginPass").value.trim();if(!nm||!pw){showErr("请输入姓名和密码");return;}var res=await api("/api/login",{method:"POST",body:{name:nm,pass:pw}});if(!res.ok){showErr(res.msg);return;}currentUser={empId:res.empId,role:res.role,name:res.name};await loadInit();document.getElementById("loginPage").style.display="none";document.getElementById("mainApp").style.display="block";setupTabs();renderUserLabel();showFirstTab();}
+async function doLogin(){var nm=document.getElementById("loginName").value.trim();var pw=document.getElementById("loginPass").value.trim();if(!nm||!pw){showErr("请输入姓名和密码");return;}var res=await api("/api/login",{method:"POST",body:{name:nm,pass:pw}});if(!res.ok){showErr(res.msg);return;}if(document.getElementById("rememberMe").checked){var sv=JSON.parse(localStorage.getItem("savedLogins")||"{}");sv[nm]=pw;localStorage.setItem("savedLogins",JSON.stringify(sv));localStorage.setItem("lastUser",nm);}currentUser={empId:res.empId,role:res.role,name:res.name};await loadInit();document.getElementById("loginPage").style.display="none";document.getElementById("mainApp").style.display="block";setupTabs();renderUserLabel();showFirstTab();}
 function showErr(msg){var e=document.getElementById("loginErr");e.textContent=msg;e.style.display="block";setTimeout(function(){e.style.display="none";},2500);}
-function doLogout(){currentUser=null;document.getElementById("loginPage").style.display="flex";document.getElementById("mainApp").style.display="none";}
+function doLogout(){currentUser=null;document.getElementById("loginPage").style.display="flex";document.getElementById("mainApp").style.display="none";renderQuickUsers();}
 function renderUserLabel(){var e=employees[currentUser.empId];document.getElementById("userLabel").textContent=e.name+" | "+e.role;}
 
 function setupTabs(){var bar=document.getElementById("tabBar"),tabs=[],r=currentUser.role;if(r==="总负责人"||r==="老板"){tabs.push({id:"overview",label:"📊 总览"});tabs.push({id:"team",label:"👥 团队"});tabs.push({id:"admin",label:"⚙️ 管理"});}tabs.push({id:"mytasks",label:"📝 任务"});tabs.push({id:"mystats",label:"📈 统计"});bar.innerHTML=tabs.map(function(t,i){return '<button class="'+(i===0?"active":"")+'" onclick="switchTab(\''+t.id+"',this)\">"+t.label+"</button>";}).join("");}
@@ -215,8 +215,35 @@ function closeEmpModal(){document.getElementById("empModal").style.display="none
 async function saveEmp(){var nm=document.getElementById("eName").value.trim(),rl=document.getElementById("eRole").value,pw=document.getElementById("ePass").value.trim(),ph=document.getElementById("ePhone").value.trim();if(!nm||!pw){alert("请填写姓名和密码");return;}var d={name:nm,role:rl,pass:pw,phone:ph};if(editingEmpId!==null){await api("/api/employees/"+editingEmpId,{method:"PUT",body:d});}else{await api("/api/employees",{method:"POST",body:d});}await loadInit();closeEmpModal();renderAdmin();if(document.getElementById("page-overview").classList.contains("active"))renderOverview();}
 async function deleteEmp(id){if(!confirm("确定删除 "+employees[id].name+" 吗？"))return;await api("/api/employees/"+id,{method:"DELETE"});await loadInit();renderAdmin();}
 async function resetAllPasswords(){if(!confirm("确定将全部密码重置为 123456 吗？"))return;await api("/api/reset-passwords",{method:"POST"});await loadInit();renderAdmin();alert("已重置");}
-(async function init(){await loadInit();})();
+function renderQuickUsers(){var sv=JSON.parse(localStorage.getItem("savedLogins")||"{}");var names=Object.keys(sv);if(names.length===0)return;var last=localStorage.getItem("lastUser")||names[0];var h="";names.forEach(function(n){h+="<button class='qbtn' onclick='quickLogin(`""+n+"`")'><span class='dot'></span>"+n+"</button>";});document.getElementById("quickUsers").innerHTML=h;document.getElementById("loginName").value=last;document.getElementById("loginPass").value=sv[last]||"";}function quickLogin(nm){var sv=JSON.parse(localStorage.getItem("savedLogins")||"{}");document.getElementById("loginName").value=nm;document.getElementById("loginPass").value=sv[nm]||"";}(function init(){renderQuickUsers();})();
+
 </script>
 </body>
 </html>
+
+
+<div class="login-page" id="loginPage">
+<div class="lf1"></div><div class="lf2"></div><div class="lf3"></div>
+<div class="login-card">
+<div style="text-align:center"><div class="logo">🥬</div></div>
+<h1>公司绩效薪酬统计</h1>
+<div class="sub">生鲜配送 · 每日任务追踪</div>
+
+<div id="quickUsers" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px"></div>
+
+<div class="field"><label>👤 姓名</label><input type="text" id="loginName" placeholder="请输入您的姓名" autocomplete="off"></div>
+<div class="field"><label>🔒 密码</label><input type="password" id="loginPass" placeholder="请输入密码" autocomplete="off"></div>
+
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+<input type="checkbox" id="rememberMe" checked style="width:18px;height:18px;accent-color:#87D19E">
+<label for="rememberMe" style="font-size:14px;color:#7a9a7e;cursor:pointer;font-weight:500">记住账号和密码</label>
+</div>
+
+<div class="err" id="loginErr">姓名或密码错误</div>
+<button class="login-btn" onclick="doLogin()">🥬 进 入 系 统</button>
+<div class="hint">🔑 初始密码 123456 · 登录后可修改</div>
+</div>
+</div>
+
+
 
