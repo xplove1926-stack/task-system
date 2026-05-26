@@ -1,73 +1,79 @@
 ﻿const http = require("http");
 const fs = require("fs");
 const path = require("path");
-
 const DATA_FILE = path.join(__dirname, "data.json");
 const PORT = process.env.PORT || 3456;
 
-// ---- Data helpers ----
-function loadData() {
-  try { return JSON.parse(fs.readFileSync(DATA_FILE, "utf8")); }
-  catch (_) { return null; }
-}
-function saveData(data) { fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf8"); }
+function loadData() { try { return JSON.parse(fs.readFileSync(DATA_FILE, "utf8")); } catch (_) { return null; } }
+function saveData(d) { fs.writeFileSync(DATA_FILE, JSON.stringify(d, null, 2), "utf8"); }
 
 function initData() {
   if (loadData()) return;
   const tasks = {
-    "采购员": ["完成当日采购订单","供应商比价记录","采购品质量验收","采购清单录入系统"],
-    "分拣员": ["完成当日分拣任务","分拣准确率检查","异常品上报处理","分拣区域清洁整理"],
-    "配送司机": ["完成当日配送任务","车辆安全检查记录","客户签收确认无误","回单整理上交"],
-    "销售经理": ["客户拜访/回访记录","新客户开发跟进","销售报表填写","客户投诉处理"],
-    "库管": ["入库验收登记","出库核对发货","库存盘点核对","温控记录检查"],
-    "会计": ["日常账务处理","发票整理归档","报销单据审核","银行对账确认"],
-    "下单员": ["客户订单处理完成","订单核对确认","异常订单跟踪处理","客户沟通记录"],
-    "主管经理": ["团队早会/夕会主持","现场巡查记录","工作日报审核","异常事件处理"],
-    "老板": ["查看团队日报","审批重要事项","客户关系维护","经营数据分析"]
+    "老板": ["查看团队日报","审批重要事项","客户关系维护","经营数据分析"],
+    "总负责人": ["团队统筹协调","重大事项决策","部门绩效审核","对外联络对接"],
+    "财务经理": ["成本费用核算与监控","税务管理","资金管理","经营分析","账务处理","外部对接","跨部门协助"],
+    "财务核算岗": ["采购成本监控","单位成本管控","客户对账","应收账款管理","发票凭证处理"],
+    "出纳": ["数据与报表","应付管理","供应商对账","票据凭证管理","跨部门协助"],
+    "商务专员": ["人事管理有效性","行政管理","标书协助","合同管理","绩效数据"],
+    "客户经理岗": ["客户拜访与维护","订单管理","售后服务","工作报表","跨部门协同"],
+    "蔬菜采购": ["询比价与采购计划","供应商开发与管理","到货验收与账务","数据报表与分析","跨部门核对"],
+    "预包装采购": ["询比价与采购计划","供应商开发与管理","到货验收与账务","数据报表与分析","跨部门核对"],
+    "早班库管": ["收货验收","损耗处理","退换货管理","单据管理","盘点工作"],
+    "晚班库管": ["夜班交接","夜间到货验收","系统入库","库存核对","安全管理"],
+    "信息岗": ["系统基础数据维护","价格调整执行","订单处理","特殊单据处理","账号权限管理"],
+    "分拣": ["分拣准确率","质量把控","复合单确认","现场管理","损耗数据","跨部门协作"],
+    "分拣主管": ["人员管理","质量监控","损耗控制","现场管理","盘点工作","跨部门协调"],
+    "司机": ["分拣品质检查","安全合规","准时送达率","客户满意度","确认复核单","跨部门协作"],
+    "配送主管": ["准时与效率","服务质量","客户满意度","财务数据对接","库房协调","配送调度"],
+    "标书专员": ["标前信息收集与预判","投标资料准备与更新","标书编制与审核","合规与风险管控","项目中标跟进"]
   };
+
+  const kpiWeights = {
+    "老板": {},
+    "总负责人": {},
+    "财务经理": {"成本费用核算与监控":30,"税务管理":15,"资金管理":10,"经营分析":20,"账务处理":15,"外部对接":5,"跨部门协助":5},
+    "财务核算岗": {"采购成本监控":30,"单位成本管控":15,"客户对账":40,"应收账款管理":10,"发票凭证处理":5},
+    "出纳": {"数据与报表":20,"应付管理":40,"供应商对账":30,"票据凭证管理":5,"跨部门协助":5},
+    "商务专员": {"人事管理有效性":10,"行政管理":15,"标书协助":30,"合同管理":15,"绩效数据":30},
+    "客户经理岗": {"客户拜访与维护":30,"订单管理":20,"售后服务":35,"工作报表":10,"跨部门协同":5},
+    "蔬菜采购": {"询比价与采购计划":40,"供应商开发与管理":30,"到货验收与账务":15,"数据报表与分析":10,"跨部门核对":5},
+    "预包装采购": {"询比价与采购计划":40,"供应商开发与管理":30,"到货验收与账务":15,"数据报表与分析":10,"跨部门核对":5},
+    "早班库管": {"收货验收":30,"损耗处理":20,"退换货管理":20,"单据管理":10,"盘点工作":20},
+    "晚班库管": {"夜班交接":10,"夜间到货验收":20,"系统入库":30,"库存核对":20,"安全管理":20},
+    "信息岗": {"系统基础数据维护":25,"价格调整执行":50,"订单处理":10,"特殊单据处理":5,"账号权限管理":10},
+    "分拣": {"分拣准确率":30,"质量把控":30,"复合单确认":20,"现场管理":10,"损耗数据":5,"跨部门协作":5},
+    "分拣主管": {"人员管理":10,"质量监控":30,"损耗控制":30,"现场管理":10,"盘点工作":10,"跨部门协调":10},
+    "司机": {"分拣品质检查":15,"安全合规":10,"准时送达率":10,"客户满意度":30,"确认复核单":25,"跨部门协作":10},
+    "配送主管": {"准时与效率":30,"服务质量":30,"客户满意度":20,"财务数据对接":10,"库房协调":10},
+    "标书专员": {"标前信息收集与预判":20,"投标资料准备与更新":15,"标书编制与审核":50,"合规与风险管控":15,"项目中标跟进":10}
+  };
+
   const employees = [
-    { name: "张德福", role: "采购员", pass: "123456", phone: "13800001001" },
-    { name: "李明华", role: "采购员", pass: "123456", phone: "13800001002" },
-    { name: "王志强", role: "采购员", pass: "123456", phone: "13800001003" },
-    { name: "陈小燕", role: "分拣员", pass: "123456", phone: "13800001004" },
-    { name: "刘桂芳", role: "分拣员", pass: "123456", phone: "13800001005" },
-    { name: "赵大刚", role: "分拣员", pass: "123456", phone: "13800001006" },
-    { name: "周秀英", role: "分拣员", pass: "123456", phone: "13800001007" },
-    { name: "吴建国", role: "配送司机", pass: "123456", phone: "13800001008" },
-    { name: "郑永发", role: "配送司机", pass: "123456", phone: "13800001009" },
-    { name: "冯学军", role: "配送司机", pass: "123456", phone: "13800001010" },
-    { name: "何大伟", role: "配送司机", pass: "123456", phone: "13800001011" },
-    { name: "孙丽华", role: "销售经理", pass: "123456", phone: "13800001012" },
-    { name: "马国栋", role: "销售经理", pass: "123456", phone: "13800001013" },
-    { name: "黄丽珍", role: "库管", pass: "123456", phone: "13800001014" },
-    { name: "林文龙", role: "库管", pass: "123456", phone: "13800001015" },
-    { name: "杨美琴", role: "会计", pass: "123456", phone: "13800001016" },
-    { name: "徐晓明", role: "会计", pass: "123456", phone: "13800001017" },
-    { name: "朱建华", role: "下单员", pass: "123456", phone: "13800001018" },
-    { name: "谢晓红", role: "下单员", pass: "123456", phone: "13800001019" },
-    { name: "沈志远", role: "下单员", pass: "123456", phone: "13800001020" },
-    { name: "韩雪梅", role: "下单员", pass: "123456", phone: "13800001021" },
-    { name: "曹永强", role: "主管经理", pass: "123456", phone: "13800001022" },
-    { name: "魏玉兰", role: "主管经理", pass: "123456", phone: "13800001023" },
-    { name: "周总", role: "老板", pass: "123456", phone: "13800001000" }
+    { name: "邬悦桐", role: "老板", pass: "123456", phone: "" },
+    { name: "郭菲", role: "总负责人", pass: "123456", phone: "" },
+    { name: "张丽霞", role: "财务经理", pass: "123456", phone: "" },
+    { name: "王霞", role: "财务核算岗", pass: "123456", phone: "" },
+    { name: "张娟", role: "财务核算岗", pass: "123456", phone: "" },
+    { name: "李学英", role: "出纳", pass: "123456", phone: "" },
+    { name: "张磊", role: "商务专员", pass: "123456", phone: "" },
+    { name: "赵洪利", role: "客户经理岗", pass: "123456", phone: "" },
+    { name: "路林龙", role: "蔬菜采购", pass: "123456", phone: "" },
+    { name: "刘海文", role: "预包装采购", pass: "123456", phone: "" },
+    { name: "李显礼", role: "预包装采购", pass: "123456", phone: "" },
+    { name: "王乐", role: "早班库管", pass: "123456", phone: "" },
+    { name: "蒋晟", role: "晚班库管", pass: "123456", phone: "" },
+    { name: "魏毓辰", role: "信息岗", pass: "123456", phone: "" },
+    { name: "张莉莉", role: "信息岗", pass: "123456", phone: "" },
+    { name: "徐鹏", role: "标书专员", pass: "123456", phone: "" },
+    { name: "徐元", role: "配送主管", pass: "123456", phone: "" },{ name: "张世举", role: "司机", pass: "123456", phone: "" },{ name: "周青霞", role: "分拣主管", pass: "123456", phone: "" },{ name: "张莹", role: "分拣", pass: "123456", phone: "" }
   ];
-  const completions = {};
-  saveData({ tasks, employees, completions });
+
+  saveData({ tasks, kpiWeights, employees, completions: {} });
 }
 
-// ---- MIME ----
-const MIME = { ".html": "text/html; charset=utf-8", ".js": "application/javascript", ".css": "text/css", ".json": "application/json", ".png": "image/png", ".ico": "image/x-icon" };
 
-function serveStatic(req, res) {
-  let filePath = req.url === "/" ? "/index.html" : req.url;
-  filePath = path.join(__dirname, filePath);
-  if (!filePath.startsWith(__dirname)) { res.writeHead(403); res.end(); return true; }
-  if (!fs.existsSync(filePath) || filePath.endsWith("data.json")) return false;
-  const ext = path.extname(filePath);
-  res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream" });
-  fs.createReadStream(filePath).pipe(res);
-  return true;
-}
+const MIME = { ".html": "text/html; charset=utf-8", ".js": "application/javascript", ".css": "text/css", ".json": "application/json", ".png": "image/png" };
 
 function readBody(req) {
   return new Promise((resolve) => {
@@ -76,13 +82,11 @@ function readBody(req) {
     req.on("end", () => { try { resolve(JSON.parse(body)); } catch (_) { resolve({}); } });
   });
 }
-
 function json(res, data, code = 200) {
   res.writeHead(code, { "Content-Type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(data));
 }
 
-// ---- Server ----
 initData();
 
 const server = http.createServer(async (req, res) => {
@@ -91,119 +95,92 @@ const server = http.createServer(async (req, res) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   if (req.method === "OPTIONS") { res.writeHead(204); res.end(); return; }
 
-  // Static files
-  if (req.method === "GET" && serveStatic(req, res)) return;
-
-  // API routes
   const url = req.url.split("?")[0];
 
-  // GET /api/init - return tasks, employees (no passwords), completions
-  if (req.method === "GET" && url === "/api/init") {
-    const d = loadData();
-    const safeEmps = d.employees.map(e => ({ name: e.name, role: e.role, phone: e.phone }));
-    return json(res, { tasks: d.tasks, employees: safeEmps, completions: d.completions });
+  if (req.method === "GET" && (url === "/" || url === "/index.html")) {
+    const fp = path.join(__dirname, "index.html");
+    if (fs.existsSync(fp)) { res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" }); fs.createReadStream(fp).pipe(res); return; }
   }
 
-  // POST /api/login
+  if (req.method === "GET" && url === "/api/init") {
+    const d = loadData();
+    const se = d.employees.map(e => ({ name: e.name, role: e.role, phone: e.phone }));
+    return json(res, { tasks: d.tasks, kpiWeights: d.kpiWeights, employees: se, completions: d.completions });
+  }
+
   if (req.method === "POST" && url === "/api/login") {
     const body = await readBody(req);
     const d = loadData();
     const emp = d.employees.find(e => e.name === body.name && e.pass === body.pass);
     if (!emp) return json(res, { ok: false, msg: "姓名或密码错误" }, 401);
     const idx = d.employees.indexOf(emp);
-    return json(res, { ok: true, empId: idx, role: emp.role, name: emp.name, tasks: d.tasks[emp.role] || [] });
+    return json(res, { ok: true, empId: idx, role: emp.role, name: emp.name, tasks: d.tasks[emp.role] || [], weights: d.kpiWeights[emp.role] || {} });
   }
 
-  // POST /api/toggle - toggle task completion
+  if (req.method === "POST" && url === "/api/change-pass") {
+    const body = await readBody(req);
+    const d = loadData();
+    const emp = d.employees[body.empId];
+    if (!emp || emp.pass !== body.oldPass) return json(res, { ok: false, msg: "原密码错误" }, 400);
+    emp.pass = body.newPass; saveData(d);
+    return json(res, { ok: true });
+  }
+
   if (req.method === "POST" && url === "/api/toggle") {
     const body = await readBody(req);
     const d = loadData();
     const { empId, date, taskIdx } = body;
     if (!d.completions[empId]) d.completions[empId] = {};
     if (!d.completions[empId][date]) d.completions[empId][date] = {};
-    if (d.completions[empId][date][taskIdx]) {
-      delete d.completions[empId][date][taskIdx];
-    } else {
-      d.completions[empId][date][taskIdx] = true;
-    }
+    if (d.completions[empId][date][taskIdx]) { delete d.completions[empId][date][taskIdx]; }
+    else { d.completions[empId][date][taskIdx] = true; }
     saveData(d);
     return json(res, { ok: true, completed: !!d.completions[empId][date][taskIdx] });
   }
 
-  // GET /api/completions?empId=X&date=Y
   if (req.method === "GET" && url === "/api/completions") {
     const d = loadData();
     const q = new URL(req.url, "http://localhost").searchParams;
     const empId = q.get("empId"), date = q.get("date");
-    if (empId && date) {
-      const c = (d.completions[empId] && d.completions[empId][date]) || {};
-      return json(res, c);
-    }
+    if (empId && date) return json(res, (d.completions[empId] && d.completions[empId][date]) || {});
     return json(res, d.completions);
   }
 
-  // GET /api/employees (admin - returns with passwords)
-  if (req.method === "GET" && url === "/api/employees") {
-    const d = loadData();
-    return json(res, d.employees);
-  }
-
-  // POST /api/employees
+  if (req.method === "GET" && url === "/api/employees") { return json(res, loadData().employees); }
   if (req.method === "POST" && url === "/api/employees") {
-    const body = await readBody(req);
-    const d = loadData();
+    const body = await readBody(req); const d = loadData();
     d.employees.push({ name: body.name, role: body.role, pass: body.pass || "123456", phone: body.phone || "" });
-    saveData(d);
-    return json(res, { ok: true });
+    saveData(d); return json(res, { ok: true });
   }
-
-  // PUT /api/employees/:id
   if (req.method === "PUT" && url.startsWith("/api/employees/")) {
-    const id = parseInt(url.split("/").pop());
-    const body = await readBody(req);
-    const d = loadData();
+    const id = parseInt(url.split("/").pop()); const body = await readBody(req); const d = loadData();
     if (id >= 0 && id < d.employees.length) {
       d.employees[id] = { name: body.name, role: body.role, pass: body.pass, phone: body.phone || "" };
-      saveData(d);
-      return json(res, { ok: true });
+      saveData(d); return json(res, { ok: true });
     }
     return json(res, { ok: false }, 404);
   }
-
-  // DELETE /api/employees/:id
   if (req.method === "DELETE" && url.startsWith("/api/employees/")) {
-    const id = parseInt(url.split("/").pop());
-    const d = loadData();
+    const id = parseInt(url.split("/").pop()); const d = loadData();
     if (id >= 0 && id < d.employees.length) {
-      d.employees.splice(id, 1);
-      if (d.completions[id]) delete d.completions[id];
-      // reindex completions
+      d.employees.splice(id, 1); if (d.completions[id]) delete d.completions[id];
       const nc = {};
       for (const k in d.completions) { const nk = parseInt(k) > id ? parseInt(k) - 1 : k; nc[nk] = d.completions[k]; }
-      d.completions = nc;
-      saveData(d);
-      return json(res, { ok: true });
+      d.completions = nc; saveData(d); return json(res, { ok: true });
     }
     return json(res, { ok: false }, 404);
   }
-
-  // POST /api/reset-passwords
   if (req.method === "POST" && url === "/api/reset-passwords") {
-    const d = loadData();
-    d.employees.forEach(e => e.pass = "123456");
-    saveData(d);
-    return json(res, { ok: true });
+    const d = loadData(); d.employees.forEach(e => e.pass = "123456");
+    saveData(d); return json(res, { ok: true });
   }
 
-  res.writeHead(404);
-  res.end("Not Found");
+  res.writeHead(404); res.end("Not Found");
 });
 
 server.listen(PORT, () => {
-  console.log("🥬 生鲜配送任务追踪系统");
-  console.log("   服务地址: http://localhost:" + PORT);
-  console.log("   按 Ctrl+C 停止");
+  console.log("公司绩效薪酬统计");
+  console.log("服务地址: http://localhost:" + PORT);
 });
-
 
 
